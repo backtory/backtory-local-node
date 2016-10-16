@@ -1,0 +1,84 @@
+* {
+    font-family: "monospace";
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    -webkit-animation-name: fadeIn; /* Fade in the background */
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeIn;
+    animation-duration: 0.4s
+}
+
+/* Modal Content */
+.modal-content {
+    position: fixed;
+    bottom: 0;
+    background-color: #fefefe;
+    width: 100%;
+    -webkit-animation-name: slideIn;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideIn;
+    animation-duration: 0.4s
+}
+
+.modal-header {
+    padding: 5px;
+    background-color: #4d4d4d;
+    color: white;
+    font-size: 12px;
+}
+
+.modal-body {padding: 0px;}
+
+.modal-footer {
+    padding: 1px 0 0 0;
+    margin: 0;
+    background-color: #4d4d4d;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+    from {bottom: -300px; opacity: 0}
+    to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+    from {bottom: -300px; opacity: 0}
+    to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+.modal-footer h3, .modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+textarea {
+    width: 50%;
+    margin: 0;
+    height: 400px;
+    direction: ltr;
+    text-align: left;
+    padding: 10px;
+    line-height: 27px;
+    white-space: pre-wrap;
+}

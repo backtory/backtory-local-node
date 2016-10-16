@@ -1,0 +1,81 @@
+html(style='direction:rtl;')
+    head
+        link(rel='stylesheet', href='http://yui.yahooapis.com/pure/0.6.0/pure-min.css')
+        link(rel='stylesheet', href='./static/style.css')
+    body
+        div(id="myModal", class="modal")
+            div(class="modal-content")
+               div(class="modal-header")
+                   h3(id="runTitle") اجرای تابع
+                   img(id="runButton", src="./static/play.png",
+                       style="cursor:pointer;width: 50px;float: left;position: absolute;right: 8;bottom: 8;")
+               div(class="modal-body")
+                   textarea(style="width:70%;color:#555;", id="responseTextArea",
+                            placeholder="Output goes here ...", disabled)
+                   textarea(style="width:30%", id="requestBody")
+                       | {
+                       |    "x": 1,
+                       |    "y": 2,
+                       |    "z": "salam"
+                       | }
+               div(class="modal-footer")
+                   h3
+
+        table(class="pure-table pure-table-bordered", style='width:100%;text-align:center;height:80%;')
+            thead
+                tr
+                    th(style='text-align:center;border:1px solid #cbcbcb;')
+                    th(style='text-align:center;') نام تابع
+                    th(style='text-align:center;') وجود فایل
+                    th(style='text-align:center;') سینتکس
+                    th(style='text-align:center;') Handler
+                    th(style='text-align:center;') احراز حویت
+                    th(style='text-align:center;') زمان مجاز
+                    th(style='text-align:center;') آدرس فایل
+            tbody
+                - var n = 0;
+                each functionInfo, index in functionInfos
+                    - n++;
+                    if n%2 === 0
+                        tr
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[0]
+                            td(style="border:1px solid #e0e0e0;")
+                                a(href="#")=functionInfo[1]
+                            if (functionInfo[6]==="YES")
+                                td(style="border:1px solid #e0e0e0;color:green;") بله
+                            else
+                                td(style="border:1px solid #e0e0e0;color:red;") خیر
+                            if (functionInfo[7]==="CORRECT")
+                                td(style="border:1px solid #e0e0e0;color:green;") صحیح
+                            else if (functionInfo[7]==="WRONG")
+                                td(style="border:1px solid #e0e0e0;color:red;") غلط
+                            else
+                                td(style="border:1px solid #e0e0e0;")= functionInfo[7]
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[2]
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[3]
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[4]
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[5]
+                    else
+                        tr(class="pure-table-odd")
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[0]
+                            td(style="border:1px solid #e0e0e0;")
+                                a(href="#")=functionInfo[1]
+                            if (functionInfo[6]==="YES")
+                                td(style="border:1px solid #e0e0e0;color:green;") بله
+                            else
+                                td(style="border:1px solid #e0e0e0;color:red;") خیر
+                            if (functionInfo[7]==="CORRECT")
+                                td(style="border:1px solid #e0e0e0;color:green;") صحیح
+                            else if (functionInfo[7]==="WRONG")
+                                td(style="border:1px solid #e0e0e0;color:red;") غلط
+                            else
+                                td(style="border:1px solid #e0e0e0;")= functionInfo[7]
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[2]
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[3]
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[4]
+                            td(style="border:1px solid #e0e0e0;")= functionInfo[5]
+
+        script(src='/static/main.js')
+        script.
+            window.backtoryAuthenticationId= "#{authId}";
+            window.backtoryMasterKey= "#{masterKey}";

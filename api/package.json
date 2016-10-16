@@ -1,0 +1,27 @@
+{
+    "name": "backtory-local-node",
+    "description": "Local Enviroment for Backtory Cloud-Code Service Develpment",
+    "version": "0.0.1",
+    "author": "Pegah Co. (http://pegahtech.ir/)",
+    "contributors": [
+        "Majid Mobini <mobini.majid@gmail.com>"
+    ],
+    "dependencies": {
+        "express": "4.14.0",
+        "body-parser": "1.15.2",
+        "randomstring": "1.1.5",
+        "request": "2.75.0",
+        "jsonwebtoken": "7.1.9",
+        "node-rest-client": "2.0.1",
+        "cli-table2": "0.2.0",
+        "pug": "*",
+        "unirest": "*"
+    },
+    "keywords": [
+        "backtory",
+        "cloud-code",
+        "nodejs",
+        "pegah",
+        "local"
+    ]
+}
