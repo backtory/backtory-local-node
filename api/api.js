@@ -58,11 +58,14 @@ app.post('/:functionName', function (req, res) {
     if (authenticationMode == "PUBLIC") {
         if (authorization != null) {
             jwt.verify(authorization.split(" ")[1], backtoryPublicKey, function (err, decoded) {
-                console.log(err);
-                console.log(decoded);
-                userId = decoded.user_id;
-                userName = decoded.user_name;
-                keyType = decoded.scope[0];
+                if (err)
+                    console.log(err);
+                else {
+                    userId = decoded.user_id;
+                    userName = decoded.user_name;
+                    keyType = decoded.scope[0];
+                }
+                return;
             });
         }
     } else {
