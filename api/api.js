@@ -21,6 +21,7 @@ var cloudCodeFunctions = {};
 var cloudCodeFunctionsUiData = [];
 var authenticationId = null;
 var masterKey = null;
+var clientKey = null;
 
 var controller = new Controller(__dirname + "/../src", function(err){
 });
@@ -55,76 +56,95 @@ app.post('/:functionName', function (req, res) {
     var userName = null;
     var keyType = null;
 
+    checkAuthentication(authorization, authenticationMode, res, function(error, userId, userName, keyType) {
+       if (!error) {
+           controller.runRequest(requestId, requestHeaders, functionName, functionVersion,
+               handlerName, timeLimit, userId, userName, authenticationId,
+               keyType, event, function(result) {
+                   if (result.returnError != "") {
+                       if (!showLogs)
+                           res.status(420).send(result.returnError);
+                       else
+                           res.status(420).send({
+                               "response": result.returnError,
+                               "logs": result.informationLogs
+                           });
+                   }
+                   else {
+                       if (!showLogs)
+                           res.status(200).send(result.returnValue);
+                       else
+                           res.status(200).send({
+                               "response": result.returnValue,
+                               "logs": result.informationLogs
+                           });
+                   }
+               });
+       }
+    });
+
+});
+
+app.get('/', function (req, res) {
+    res.render('index', {functionInfos: cloudCodeFunctionsUiData, authId: authenticationId,
+                         masterKey: masterKey, clientKey: clientKey});
+});
+
+
+var checkAuthentication = function (authorization, authenticationMode, res, callback) {
+    var userId = null;
+    var userName = null;
+    var keyType = null;
+
     if (authenticationMode == "PUBLIC") {
-        if (authorization != null) {
+        if (authorization) {
             jwt.verify(authorization.split(" ")[1], backtoryPublicKey, function (err, decoded) {
-                if (err)
+                if (err) {
                     console.log(err);
+                }
                 else {
-                    userId = decoded.user_id;
-                    userName = decoded.user_name;
+                    userId = decoded.user_id || decoded.client_id || null;
+                    userName = decoded.user_name || null;
                     keyType = decoded.scope[0];
                 }
                 return;
             });
         }
+        callback(null, userId, userName, keyType);
     } else {
-        if (authorization == null) {
+        if (!authorization) {
             res.status(401).send({
                 error: "unauthorized",
                 error_description: "Full authentication is required to access this resource"
             });
+            callback("error", userId, userName, keyType);
             return;
         } else {
             jwt.verify(authorization.split(" ")[1], backtoryPublicKey, function (err, decoded) {
                 if (err) {
+                    callback("error", userId, userName, keyType);
                     res.status(401).send({
                         error: "unauthorized",
                         error_description: "Full authentication is required to access this resource"
                     });
                     return;
                 }
-                userId = decoded.user_id;
-                userName = decoded.user_name;
+                userId = decoded.user_id || decoded.client_id || null;
+                userName = decoded.user_name || null;
                 keyType = decoded.scope[0];
+                callback(null, userId, userName, keyType);
             });
         }
     }
 
-    controller.runRequest(requestId, requestHeaders, functionName, functionVersion,
-                         handlerName, timeLimit, userId, userName, authenticationId,
-                         keyType, event, function(result) {
-            if (result.returnError != "") {
-                if (!showLogs)
-                    res.status(420).send(result.returnError);
-                else
-                    res.status(420).send({
-                        "response": result.returnError,
-                        "logs": result.informationLogs
-                    });
-            }
-            else {
-                if (!showLogs)
-                    res.status(200).send(result.returnValue);
-                else
-                    res.status(200).send({
-                        "response": result.returnValue,
-                        "logs": result.informationLogs
-                    });
-            }
-    });
-});
+};
 
-app.get('/', function (req, res) {
-    res.render('index', {functionInfos: cloudCodeFunctionsUiData, authId: authenticationId, masterKey: masterKey});
-});
-
-
-utils.initialSetting(function(data, dataForUi, authId, mKey) {
+utils.initialSetting(function(data, dataForUi, authId, mKey, cKey) {
     cloudCodeFunctions = data;
     cloudCodeFunctionsUiData = dataForUi;
     authenticationId = authId;
     masterKey = mKey;
+    clientKey = cKey;
     utils.getPublicKey(function(key) {
         backtoryPublicKey = key;
         utils.log(backtoryPublicKey + "\n");

@@ -97,7 +97,7 @@ var utils = module.exports = {
                                 }, 60000);
                             }
                         } else {
-                            console.error("other jobs not supported yet");
+                            //console.error("other jobs not supported yet");
                         }
 
                         var syntaxCorrectness = "WRONG";
@@ -140,8 +140,8 @@ var utils = module.exports = {
                     console.log(table.toString());
 
 
-                    utils.readIntegrationInfo(function (authId, masterKey) {
-                        callback(lambdaConfig, dataForUi, authId, masterKey);
+                    utils.readIntegrationInfo(function (authId, masterKey, clientKey) {
+                        callback(lambdaConfig, dataForUi, authId, masterKey, clientKey);
                     });
 
                 });
@@ -205,6 +205,12 @@ var utils = module.exports = {
                         process.exit(1);
                     }
 
+
+                    if (result['clientKey'] == "---") {
+                        console.error("Error: You must set 'clientKey' field in 'backtory_config.json' file .");
+                        process.exit(1);
+                    }
+
                     var table = new Table({ head: [
                         {content:"Name", hAlign:'center'},
                         {content:"Backtory Key", hAlign:'center'}
@@ -218,7 +224,7 @@ var utils = module.exports = {
                         );
                     });
                     console.log(table.toString());
-                    callback(result['authenticationId'], result['masterKey']);
+                    callback(result['authenticationId'], result['masterKey'], result['clientKey']);
                 });
             } else if(err.code == 'ENOENT') {
                 console.error("Configuration file 'backtory_config.json' doesn't exist in project folder.\n");
