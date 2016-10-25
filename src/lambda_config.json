@@ -1,12 +1,12 @@
 {
   "sampleFunctionName":{
     "handlerName":"index.ping",
-    "timeLimitInMilliSeconds":0,
+    "timeLimitInMilliSeconds":1000,
     "authenticationMode": "AUTHENTICATED"
   },
   "addTwoNumbers": {
     "handlerName": "test/index2.add",
-    "timeLimitInMilliSeconds": 0,
+    "timeLimitInMilliSeconds": 1000,
     "authenticationMode": "PUBLIC"
   }
 }
