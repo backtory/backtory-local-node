@@ -15,7 +15,8 @@
         "node-rest-client": "2.0.1",
         "cli-table2": "0.2.0",
         "pug": "*",
-        "unirest": "*"
+        "unirest": "0.5.1",
+        "Q": "0.0.1"
     },
     "keywords": [
         "backtory",
