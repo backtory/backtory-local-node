@@ -5,21 +5,32 @@ var fs = require('fs');
 var config = require('./config');
 
 
-var Q = require('q');
-function spawn(makeGenerator, requestBody, context) {
-    var p = Q.async(makeGenerator)(requestBody, context);
-    p.then(function(result){
-        send_result(context.requestId, result, null);
-    }).catch(function(error){
-        save_user_logs(context.requestId, error.stack);
-        send_result(context.requestId, null, error.message);
-    })
-}
-Q.spawn = spawn;
+//var Q = require('q');
+//function spawn(makeGenerator, requestBody, context) {
+//    var p = Q.async(makeGenerator)(requestBody, context);
+//    p.then(function(result){
+//        //context.succeed(result || "");
+//    }).catch(function(error){
+//        context.log(error.stack);
+//        context.fail(error.message);
+//    })
+//}
+//Q.spawn = spawn;
+//var sampleGenerator = function *sampleGenerator(){};
+//
+//function isGenerator(arg) {
+//    return arg.constructor === sampleGenerator.constructor;
+//}
+//
+//function isGeneratorFunction(obj) {
+//    var constructor = obj.constructor;
+//    if (!constructor) return false;
+//    if ('GeneratorFunction' === constructor.name || 'GeneratorFunction' === constructor.displayName) return true;
+//    return isGenerator(constructor.prototype);
+//}
 
 
 var controller;
-var loadedModules = {};
 
 var Controller = function(userCodesPath, callback) {
 
@@ -32,20 +43,6 @@ var Controller = function(userCodesPath, callback) {
     this.debug = config.debug;
     controller = this;
 };
-
-
-var sampleGenerator = function *sampleGenerator(){};
-
-function isGenerator(arg) {
-    return arg.constructor === sampleGenerator.constructor;
-}
-
-function isGeneratorFunction(obj) {
-    var constructor = obj.constructor;
-    if (!constructor) return false;
-    if ('GeneratorFunction' === constructor.name || 'GeneratorFunction' === constructor.displayName) return true;
-    return isGenerator(constructor.prototype);
-}
 
 
 Controller.prototype.runRequest = function (requestId, requestHeaders, functionName, functionVersion,
@@ -116,11 +113,11 @@ Controller.prototype.runRequest = function (requestId, requestHeaders, functionN
         var contextObj = Object.create(LambdaContext);
         contextObj.init(requestId, requestHeaders, securityContext);
 
-        if (isGeneratorFunction(lambdaHandler)) {
-            Q.spawn(lambdaHandler, event, contextObj);
-        } else {
+        //if (isGeneratorFunction(lambdaHandler)) {
+        //    Q.spawn(lambdaHandler, event, contextObj);
+        //} else {
             lambdaHandler(event, contextObj);
-        }
+        //}
     }
     catch(exception) {
         save_user_logs(requestId, exception.stack);
@@ -189,6 +186,7 @@ exports.LambdaContext = LambdaContext;
 
 
 Controller.prototype.createFinalOutput = function (requestInfo) {
+    //console.log(JSON.stringify(requestInfo.returnValue, null, 0) == "null")
     var withError = false;
 
     if (typeof requestInfo.returnValue !== 'string')

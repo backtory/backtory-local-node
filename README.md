@@ -6,6 +6,7 @@
 ```shell
   cd /path/to/project/api
   npm install
+  npm install backtory-sdk -g
 ```
 
 ## Run
